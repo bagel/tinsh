@@ -1,4 +1,8 @@
-wn which can used to stastic the number of files and directories under a directory.
+Bash wn which can used to stastic the number of files and directories under a directory.
+
+How to use
+cp wn /usr/local/bin
+wn /home   #output the number
 
 ####2011-5-26####
 Calculate one directory.

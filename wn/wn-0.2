@@ -4,7 +4,7 @@
 
 if [ $# -ge 2 ] ; then
   case $1 in
-    -a)expr `ls -la $2 | wc -l` - 1 ;;
+    -a)expr `ls -l $1 $2 | wc -l` - 1 ;;
   esac
 else
   if [ -d $1 ] ; then

@@ -4,5 +4,11 @@ How to use
 cp wn /usr/local/bin
 wn /home   #output the number
 
-####2011-5-26####
+####2011-5-25####
+wn-0.1
 Calculate one directory.
+
+####2011-5-26####
+wn-0.2
+Can calculate contain hide files
+

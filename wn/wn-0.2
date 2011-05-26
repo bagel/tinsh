@@ -1,0 +1,15 @@
+#!/bin/sh
+# 11-05-26 10:53:39
+# Contain hide files or directories
+
+if [ $# -ge 2 ] ; then
+  case $1 in
+    -a)expr `ls -la $2 | wc -l` - 1 ;;
+  esac
+else
+  if [ -d $1 ] ; then
+    expr `ls -l $1 | wc -l` - 1
+  else
+    echo "Error: not a directory"
+  fi
+fi

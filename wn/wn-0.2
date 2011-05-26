@@ -3,9 +3,13 @@
 # Contain hide files or directories
 
 if [ $# -ge 2 ] ; then
-  case $1 in
-    -a)expr `ls -l $1 $2 | wc -l` - 1 ;;
-  esac
+  if [ ! -d $2 ] ; then
+    echo "Error: not a directory"
+  else
+    case $1 in
+      -a)expr `ls -l $1 $2 | wc -l` - 1 ;;
+    esac
+  fi
 else
   if [ -d $1 ] ; then
     expr `ls -l $1 | wc -l` - 1

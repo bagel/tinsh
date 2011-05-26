@@ -1,6 +1,6 @@
 #!/bin/sh
 # 11-05-25 23:38:31
-# Number of files and directory under one directory
+# Number of files and directories under one directory
 
 if [ -d $1 ] ; then
   expr `ls -l $1 | wc -l` - 1

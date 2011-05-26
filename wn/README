@@ -3,6 +3,7 @@ Bash wn which can used to stastic the number of files and directories under a di
 How to use
 cp wn /usr/local/bin
 wn /home   #output the number
+wn -a /home   #output the number of all files
 
 ####2011-5-25####
 wn-0.1

@@ -1,0 +1,22 @@
+#!/bin/sh
+# 2011-05-28 00:18:58
+# Contain subdirectory,but just one layer
+
+if [ $# -ge 2 ] ; then
+  if [ -d $2 ] ; then
+    cd $2
+    case $1 in
+      -a) expr `ls -la $2 | wc -l` - 1 ;;
+      -r) list=(`ls`)
+          echo -en ".\t"
+          expr `ls -l $2 | wc -l` - 1
+          for file in ${list[*]} ; do
+            if [ -d $file ] ; then
+              echo -en "$file\t"
+              expr `ls -l $file | wc -l` - 1 
+            fi
+          done
+          ;;
+    esac
+  fi
+fi

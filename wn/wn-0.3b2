@@ -1,0 +1,28 @@
+#!/bin/sh
+# 2011-05-28 21:39:47
+# Contain all subdirectory
+
+if [ $# -ge 2 ] ; then
+  if [ -d $2 ] ; then
+    cd $2
+    case $1 in
+      -a) expr `ls -la $2 | wc -l` - 1 ;;
+      -r) echo -en ".\t"
+          expr `ls -l $2 | wc -l` - 1
+          search()
+          {
+            s_list=(`ls`)
+            for s_file in ${s_list[*]} ; do
+              if [ -d $s_file ] ; then
+                cd $s_file
+                echo -en "$s_file\t"
+                expr `ls -l . | wc -l` - 1
+                search
+              fi
+            done
+          }
+          search
+          ;;
+    esac
+  fi
+fi

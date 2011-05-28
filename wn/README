@@ -4,6 +4,7 @@ How to use
 cp wn /usr/local/bin
 wn /home   #output the number
 wn -a /home   #output the number of all files
+wn -r /home   #contain the subdirectory
 
 ####2011-5-25####
 wn-0.1
@@ -12,4 +13,9 @@ Calculate one directory.
 ####2011-5-26####
 wn-0.2
 Can calculate contain hide files
+
+####2011-5-28####
+wn-0.3b1
+Contain the subdirectory,but just one layer.
+Something update later.
 

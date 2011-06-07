@@ -1,0 +1,47 @@
+#!/bin/sh
+# 2011-06-05 22:04:11
+# Mplayer play mp3
+
+if [ $# -lt 1 ] ; then
+  echo "Error: No input"
+else
+  cd $1
+  TIME=2
+  i=0
+  k=1
+  max=$('ls' | cat -n | tail -1 | awk '{ printf $1  }' | xargs)
+  while [ $i -le $max ] ; do
+    i=$(echo $i+$k | bc)
+    'ls' | sed 's/ /\\/g' | cat -n | grep $i | head -1 | awk '{ printf $2 }' | sed 's/\\/\\ /g' | xargs mplayer | sed -e '/^Playing/p' -n
+    echo -e ":\c"
+    read -t $TIME input
+    if [ -z $input ] ; then
+      echo
+    else
+      case $input in
+        q) break ;;
+        n) continue ;;
+        l) echo -e "length:\c"
+           read length
+           k=$length
+           continue
+           ;;
+        r) if [ $k -lt 0 ] ; then
+             k=`expr 0 - $k`
+           fi
+           i=$(echo $i-$k | bc)
+           continue
+           ;;
+        b) k=`expr 0 - $k`
+           if [ $k -gt 0 ] ; then
+             k=`expr 0 - $k`
+           fi
+           continue
+           ;;
+      esac
+    fi
+    if [ $k -lt 0 ] ; then
+      k=`expr 0 - $k`
+    fi
+  done 2>/dev/null
+fi

@@ -1,0 +1,15 @@
+Player is use mplayer to play mp3 on term.
+Also have some options.
+
+How to use
+player /home/user/music
+/home/user/music which your mp3 file stand.
+
+=====>2011-6-7<=====
+player-0.1
+Have r,b,n,l,q options.
+q:quit play.
+r:play again.
+b:back.
+n:next.
+l:length between current and the next to play.

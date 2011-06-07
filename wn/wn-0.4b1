@@ -1,0 +1,45 @@
+#!/bin/sh
+# 2011-06-07 13:36:28
+# Do not use array
+
+if [ $# -lt 1 ] ; then
+  echo "Error: No directory input"
+else
+  if [ $# -le 1 ] ; then
+    if [ ! -d $1 ] ; then
+      echo "Error: not a directory"
+    else
+      echo -en ".\t"
+      expr `'ls' -l $1 | wc -l` - 1
+    fi
+  else
+    if [ $# -le 2 ] ; then
+      if [ ! -d $2 ] ; then
+        echo "Error: not a directory"
+      else
+        case $1 in
+          -a) echo -en ".\t"
+              expr `'ls' -l $2 | wc -l` - 1
+              ;;
+          -r) echo -en ".\t"
+              expr `'ls' -l $2 | wc -l` - 1
+              cd $2
+              SPATH=`pwd`
+              search()
+              {
+                expr `'ls' -l | wc -l` - 1
+              }
+              for file in $('ls') ; do
+                if [ -d $file ] ; then
+                  cd $file
+                  echo -en "`pwd`\t"
+                  search
+                fi
+                cd $SPATH
+              done
+              ;;
+        esac 
+      fi
+    fi
+  fi
+fi

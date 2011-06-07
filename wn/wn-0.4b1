@@ -19,7 +19,7 @@ else
       else
         case $1 in
           -a) echo -en ".\t"
-              expr `'ls' -l $2 | wc -l` - 1
+              expr `'ls' -al $2 | wc -l` - 1
               ;;
           -r) echo -en ".\t"
               expr `'ls' -l $2 | wc -l` - 1

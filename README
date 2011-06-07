@@ -3,3 +3,7 @@ Bash can do lots of things which will surprise you.
 
 2011-5-25 wn
 Wn which can used to stastic the number of files and directories under a directory.
+
+2011-6-7 player
+Player is use mplayer to play mp3 on term.
+Also have some options.

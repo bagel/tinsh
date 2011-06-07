@@ -6,15 +6,15 @@ wn /home   #output the number
 wn -a /home   #output the number of all files
 wn -r /home   #contain the subdirectory
 
-####2011-5-25####
+=====>2011-5-25<=====
 wn-0.1
 Calculate one directory.
 
-####2011-5-26####
+=====>2011-5-26<=====
 wn-0.2
 Can calculate contain hide files
 
-####2011-5-28####
+=====>2011-5-28<=====
 wn-0.3b1
 Contain the subdirectory,but just one layer.
 Something update later.
@@ -23,3 +23,8 @@ wn-0.3b2
 Recursion search,but just the first directory.
 That's a fault and the loop not better.
 I'll change it and do the best.
+
+=====>2011-6-7<=====
+wn-0.4b1
+Do not use array and search depth are two.
+Something need to be changed too.

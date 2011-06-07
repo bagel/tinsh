@@ -3,9 +3,9 @@ Also have some options.
 
 How to use
 player /home/user/music
-/home/user/music which your mp3 file stand.
+#/home/user/music which your mp3 file stand.
 
-=====>2011-6-7<=====
+=====>2011-6-6<=====
 player-0.1
 Have r,b,n,l,q options.
 q:quit play.
@@ -13,3 +13,9 @@ r:play again.
 b:back.
 n:next.
 l:length between current and the next to play.
+
+=====>2011-6-7<=====
+player-0.2b1
+Improve -l,-n,-r options.
+Loop play file under a directory.
+Option -n,-r need to be improved.

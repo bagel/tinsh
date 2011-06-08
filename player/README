@@ -19,3 +19,8 @@ player-0.2b1
 Improve -l,-n,-r options.
 Loop play file under a directory.
 Option -n,-r need to be improved.
+
+=====>2011-6-8<=====
+player-0.2
+Options has been updated and works well.
+And optimize argument 'k'.

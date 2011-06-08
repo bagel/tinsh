@@ -1,0 +1,64 @@
+#!/bin/sh
+# 2011-06-07 21:24:08
+# Improve option -r and -l.
+# Loop play under a directory.
+
+cd /home/pitta/music
+if [ $# -lt 1 ] ; then
+  echo "Error: No input"
+else
+  cd $1
+  let i=1
+  let k=1
+  let j=0
+  let LTIME=3
+  max=$('ls' | cat -n | tail -1 | awk '{ printf $1 "\n" }')
+  while [ $i -le $max ] ; do
+    if [ $j -gt 0 ] ; then
+      let i=p
+      let j--
+    fi
+    'ls' | cat -n | grep $i | head -1 | sed 's/ /\\/g' | awk '{ printf $2 }' | sed 's/\\/\\ /g' | xargs mplayer | sed -e '/^Playing/p' -n
+    let s=i
+    let "i += k"
+    if [ $i -gt $max ] ; then
+      let i=1
+    fi
+    echo -e ":\c"
+    read -t $LTIME input1 input2
+    if [ -z $input1 ] ; then
+      echo 
+    else
+      let j=0
+      case $input1 in
+        q) break ;;
+        n) continue ;;
+        r) if [ -z $input2 ] ; then
+             let "i -= k"
+             continue
+           else
+             let j=$input2
+             let "i -= k"
+             let p=i
+             continue
+           fi
+           ;;
+        l) if [ -z $input2 ] ; then
+             continue
+           else
+             let k=$input2
+           fi
+           ;;
+        b) let i=s
+           if [ -z $input2 ] ; then
+             let "i -= k"
+             continue
+           else
+             let "i -= k*$input2"
+             continue
+           fi
+           ;;
+      esac
+    fi
+  done 2>/dev/null
+fi 

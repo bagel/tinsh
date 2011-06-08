@@ -2,8 +2,8 @@ Player is use mplayer to play mp3 on term.
 Also have some options.
 
 How to use
-player /home/user/music
-#/home/user/music which your mp3 file stand.
+$player /home/user/music
+/home/user/music which your mp3 file stand.
 
 =====>2011-6-6<=====
 player-0.1

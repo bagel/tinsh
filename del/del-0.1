@@ -1,0 +1,7 @@
+#!/bin/sh
+# 2011-06-24 14:21:36
+# Delete file,move to a trash folder
+
+if [ -e $1 ] ; then
+  mv $1 /home/trash
+fi

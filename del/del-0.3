@@ -1,0 +1,51 @@
+#!/bin/sh
+# 2011-07-02 18:57:34
+# Write the info to a log and remove the file in cycle
+
+tmp=/home/tmp
+
+#move
+for arg in $(echo $@) ; do
+  if [ -e $arg ] ; then
+    if [ -e $tmp/$arg ] ; then
+      let i=1
+      while [ $i -lt 100 ] ; do
+        if [ -e $tmp/"$arg"-"$i" ] ; then
+          let i++
+        else
+          mv $arg $tmp/"$arg"-"$i"
+          echo -e ""$arg"-"$i"\t`date +%Y`\t`date +%m`" >> $tmp/.log
+          break
+        fi
+      done
+    else
+      mv $arg $tmp/$arg
+      echo -e "$arg\t`date +%Y`\t`date +%m`" >> $tmp/.log
+    fi
+  else
+    echo "Error: Invalid input"
+  fi
+done
+
+#remove
+empty=$(file $tmp/.log | awk '{ printf $2 }')
+if [ $empty != "empty" ] ; then
+  while [ 1 -eq 1 ] ; do
+    file=$(head -1 $tmp/.log | awk '{ printf $1 }')
+    year=$(head -1 $tmp/.log | awk '{ printf $2 }')
+    month=$(head -1 $tmp/.log | awk '{ printf $3 }')
+    if [ $year -lt $(date +%Y) ] ; then
+      rm $tmp/$file -rf
+      cat $tmp/.log | grep -v $file > $tmp/.log-tmp
+      mv $tmp/.log-tmp $tmp/.log -f
+    elif [ $month -le $(expr `date +%m` - 4) ] ; then
+      rm $tmp/$file -rf
+      cat $tmp/.log | grep -v $file > $tmp/.log-tmp
+      mv $tmp/.log-tmp $tmp/.log -f
+    else
+      break
+    fi
+  done
+else
+  echo "Your tmp is empty"
+fi

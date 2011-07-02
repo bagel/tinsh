@@ -1,8 +1,13 @@
 Del can delete file and folder,but not remove,del move file and folder to a folder which you name it as trash.
 
 How to use
-$del filename  you will move filename to a trash.
+$del filename  
+You will move filename to a trash like /home/tmp.
+
 =====>2011-6-24<=====
 del-0.1
 Move file and folder,but only one once a time.
 
+=====>2011-7-2<=====
+del-0.2
+Move more files and folders and judge the same name file or folder in /home/tmp.

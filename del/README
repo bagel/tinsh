@@ -10,4 +10,10 @@ Move file and folder,but only one once a time.
 
 =====>2011-7-2<=====
 del-0.2
-Move more files and folders and judge the same name file or folder in /home/tmp.
+Move more files and folders.
+Judge the same name file or folder in /home/tmp.
+
+del-0.3
+Use a log file to record the files and folders which be moved to tmp.
+In the same way,use the log file to remove the file in cycle.
+That's great and I like that.

@@ -1,0 +1,13 @@
+Bak move a file to *.bak and use tar to pack the file which you want to backup to a folder like /home/backup.Bak also can recover a file.
+
+How to use
+$bak -m file
+move file to file.bak
+$bak -t file
+tar to /home/backup/file-"date".tar.gz
+$bak -r file
+recover file
+
+=====>2011-7-5<=====
+bak-0.1
+Simple backup file,like move and tar.

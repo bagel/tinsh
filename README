@@ -13,3 +13,8 @@ Also have some options.
 =====>2011-6-24<=====
 del
 Del can delete file and folder,but not rm,del move file and folder to a folder which you can name it as trash.
+
+=====>2011-7-5<=====
+bak
+Bak used to backup file,also can recover.
+Move a file to .bak and tar to a folder like /home/backup.

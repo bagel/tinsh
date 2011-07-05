@@ -1,4 +1,4 @@
-Bak move a file to *.bak and use tar to pack the file which you want to backup to a folder like /home/backup.Bak also can recover a file.
+Bak move a file to *.bak and use tar to pack the file to a folder like /home/backup.
 
 How to use
 $bak -m file

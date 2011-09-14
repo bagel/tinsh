@@ -1,0 +1,25 @@
+#!/bin/sh
+# 2011-09-06 18:58:33
+# Start applications and also arguments
+
+tmp=
+let i=0
+
+for arg in $(echo $@) ; do
+    str=$(type $arg 2>/dev/null)
+    if [ -n "$str" ] ; then
+        if [ $i -eq 0 ] ; then
+            tmp=
+        fi
+        $tmp >/dev/null 2>&1 &
+        tmp=$arg
+        let i=1
+    else
+        $tmp $arg >/dev/null 2>&1 &
+        let i=0
+    fi
+done
+
+if [ $i -eq 1 ] ; then
+    $tmp >/dev/null 2>&1 &
+fi

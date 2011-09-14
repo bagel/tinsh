@@ -1,0 +1,4 @@
+Stam can start applications and include arguments.
+How to use:
+$stam firefox xpdf doc.pdf audacious
+This statment will start firefox,xpdf will open doc.pdf and audacious also will be started.

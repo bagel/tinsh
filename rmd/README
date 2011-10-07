@@ -1,0 +1,8 @@
+Rmd
+Move files to a directory like /home/trash which you don't need them
+and you can also recover them.
+How to use
+$rmd filename
+move filename to /home/trash
+$rmd -r filename
+recover filename to its former path

@@ -22,8 +22,7 @@ recover()
 {
     if [ -e $trash/$files ]
     then
-        num=$(cat $log | awk '{ print NR " " $4 }' | grep $files | awk '{ print $1 }')
-        fpath=$(cat $log | awk 'NR<=$num{ print $5 }' | tail -1)
+        fpath=$(awk -v fparg="$files" '$4 ~ fparg { print $5 }' $log)
         mv $trash/$files $fpath
         fpline="$files $fpath"
         cat $log | grep -v "$fpline" >$trash/.log-tmp

@@ -6,3 +6,10 @@ $rmd filename
 move filename to /home/trash
 $rmd -r filename
 recover filename to its former path
+
+=====>2011-10-7<=====
+rmd-0.1
+move and recover
+
+rmd-0.2
+update log file when recover

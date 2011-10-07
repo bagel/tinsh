@@ -22,3 +22,8 @@ Move a file to .bak and tar to a folder like /home/backup.
 =====>2011-9-14<=====
 stam
 Start applications and also include arguments.
+
+=====>2011-10-7<=====
+rmd
+Move files to a directory like /home/trash which you don't need them
+and you can also recover them.

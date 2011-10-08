@@ -26,28 +26,88 @@ recover()
         mv $trash/$files $fpath
         fpline="$files $fpath"
         cat $log | grep -v "$fpline" >$trash/.log-tmp
-        mv $trash/{.log-tmp,.log} -f
+        mv $trash/{.log-tmp,.log} -f   #update log file
     fi
 }
 
+#run
+run()
+{
+    case $1 in
+        -r) farg=($@)
+            let i=1
+            while [ $i -lt $# ]
+            do
+                files=${farg[$i]}
+                recover
+                let i++
+            done
+            ;;
+        *) marg=($@)
+           let j=0
+           while [ $j -lt $# ]
+           do
+               files=${marg[$j]}
+               move
+               let j++
+           done
+           ;;
+    esac
+}
+
+#remove and  update log file
+rulog()
+{
+    rm $trash/$files -f
+    grep -v "$tline" $log > $trash/.log-rtmp
+    mv $trash/{.log-rtmp,.log} -f
+    let i--
+    let numl--
+}
+
+#time limit
+tlimit()
+{
+    nyear=$(date +%Y)
+    nmonth=$(date +%m)
+    nday=$(date +%d)
+    numl=$(wc -l $log | awk '{ print $1 }')
+    let i=1
+    while [ $i -le $numl ]
+    do
+        tline=$(head -$i $log | tail -1)
+        files=$(echo $tline | awk '{ print $4 }')
+        tyear=$(echo $tline | awk '{ print $1 }' | sed 's/-.*$//')
+        tmonth=$(echo $tline | awk '{ print $1 }' | sed 's/-/ /g' | awk '{ print $2 }')
+        tday=$(echo $tline | awk '{ print $1 }' | sed 's/^.*-//')
+        let i++
+        if [ $tyear -lt $nyear ]
+        then
+            rulog
+        fi
+        if [ $tday -lt $nday ]
+        then
+            let "trm = $nmonth - 3"
+            if [ $tmonth -le $trm ]
+            then
+                rulog
+            fi
+        else
+            let "fom = $nmonth - 4"
+            if [ $tmonth -le $fom ]
+            then
+                rulog
+            fi
+        fi
+    done
+}
+        
 #files
-case $1 in
-    -r) farg=($@)
-        let i=1
-        while [ $i -lt $# ]
-        do
-            files=${farg[$i]}
-            recover
-            let i++
-        done
-        ;;
-    *) marg=($@)
-       let j=0
-       while [ $j -lt $# ]
-       do
-           files=${marg[$j]}
-           move
-           let j++
-       done
-       ;;
-esac
+if [ $# -eq 0 ]
+then
+    echo "No input.Have fun!"
+    tlimit
+else
+    run
+    tlimit
+fi

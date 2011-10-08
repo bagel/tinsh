@@ -31,21 +31,28 @@ recover()
 }
 
 #run
+rf=$1
+ra=$@
+rn=$#
 run()
 {
-    case $1 in
-        -r) farg=($@)
+    case $rf in
+        -r) farg=($ra)
             let i=1
-            while [ $i -lt $# ]
+            while [ $i -lt $rn ]
             do
                 files=${farg[$i]}
                 recover
                 let i++
             done
             ;;
-        *) marg=($@)
+        -c) echo "Cleanning ......"
+            tlimit
+            echo "Done"
+            ;;
+        -m) marg=($ra)
            let j=0
-           while [ $j -lt $# ]
+           while [ $j -lt $rn ]
            do
                files=${marg[$j]}
                move
@@ -106,8 +113,6 @@ tlimit()
 if [ $# -eq 0 ]
 then
     echo "No input.Have fun!"
-    tlimit
 else
     run
-    tlimit
 fi

@@ -13,3 +13,7 @@ move and recover
 
 rmd-0.2
 update log file when recover
+
+=====>2011-10-8<=====
+rmd-0.2 update
+time limit to remove too old files in trash

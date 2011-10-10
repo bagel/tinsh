@@ -50,7 +50,7 @@ run()
             tlimit
             echo "Done"
             ;;
-        -m) marg=($ra)
+        *) marg=($ra)
            let j=0
            while [ $j -lt $rn ]
            do

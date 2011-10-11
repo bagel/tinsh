@@ -15,5 +15,8 @@ rmd-0.2
 update log file when recover
 
 =====>2011-10-8<=====
-rmd-0.2 update
+rmd update
 time limit to remove too old files in trash
+
+=====>2011-10-11<=====
+move files in aboslute directory and also recover

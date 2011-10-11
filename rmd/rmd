@@ -60,7 +60,7 @@ tlimit()
     let i=1
     while [ 1 -eq 1 ]
     do
-        tline=$(head -$i $log | tail -1)
+        tline=$(head -1 $log)  #head line the time is longest
         files=$(echo $tline | awk '{ print $4 }')
         tyear=$(echo $tline | awk '{ print $1 }' | sed 's/-.*$//')
         tmonth=$(echo $tline | awk '{ print $1 }' | sed 's/-/ /g' | awk '{ print $2 }')

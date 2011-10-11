@@ -12,8 +12,18 @@ move()
 {
     if [ -e $files ]
     then
-        mv $files $trash
-        echo -e "`date +%F\ %T` :: $files `pwd`" >>$log
+        nfiles=$(echo $files | sed 's/\/$//' | sed 's/^.*\///g')
+        mv $nfiles $trash
+        nchar=$(echo $files | cut -c1)
+        if [ "$nchar" != "/" ]
+        then
+            echo -e "`date +%F\ %T` :: $nfiles `pwd`" >>$log
+        else
+            npath=$(echo $files | awk -F "$nfiles" '{ print $1 }' | sed 's/\/$//')
+            echo -e "`date +%F\ %T` :: $nfiles $npath" >>$log
+        fi
+    else
+        echo "$files: No such file or directory"
     fi
 }
 
@@ -27,10 +37,61 @@ recover()
         fpline="$files $fpath"
         cat $log | grep -v "$fpline" >$trash/.log-tmp
         mv $trash/{.log-tmp,.log} -f   #update log file
+    else
+        echo "$files: No such file or directory in $trash"
     fi
 }
 
+#remove and  update log file
+rulog()
+{
+    rm $trash/$files -f
+    grep -v "$tline" $log > $trash/.log-rtmp
+    mv $trash/{.log-rtmp,.log} -f
+    let i=0
+}
+
+#time limit
+tlimit()
+{
+    nyear=$(date +%Y)
+    nmonth=$(date +%m)
+    nday=$(date +%d)
+    let i=1
+    while [ 1 -eq 1 ]
+    do
+        tline=$(head -$i $log | tail -1)
+        files=$(echo $tline | awk '{ print $4 }')
+        tyear=$(echo $tline | awk '{ print $1 }' | sed 's/-.*$//')
+        tmonth=$(echo $tline | awk '{ print $1 }' | sed 's/-/ /g' | awk '{ print $2 }')
+        tday=$(echo $tline | awk '{ print $1 }' | sed 's/^.*-//')
+        if [ $tyear -lt $nyear ]
+        then
+            rulog
+        fi
+        if [ $tday -lt $nday ]
+        then
+            let "trm = $nmonth - 3"
+            if [ $tmonth -le $trm ]
+            then
+                rulog
+            fi
+        else
+            let "fom = $nmonth - 4"
+            if [ $tmonth -le $fom ]
+            then
+                rulog
+            fi
+        fi
+        if [ $i -eq 1 ]   #no file remove break
+        then
+            break
+        fi
+    done
+}
+        
 #run
+#$1,$@,$# in function is empty
 rf=$1
 ra=$@
 rn=$#
@@ -62,53 +123,6 @@ run()
     esac
 }
 
-#remove and  update log file
-rulog()
-{
-    rm $trash/$files -f
-    grep -v "$tline" $log > $trash/.log-rtmp
-    mv $trash/{.log-rtmp,.log} -f
-    let i--
-    let numl--
-}
-
-#time limit
-tlimit()
-{
-    nyear=$(date +%Y)
-    nmonth=$(date +%m)
-    nday=$(date +%d)
-    numl=$(wc -l $log | awk '{ print $1 }')
-    let i=1
-    while [ $i -le $numl ]
-    do
-        tline=$(head -$i $log | tail -1)
-        files=$(echo $tline | awk '{ print $4 }')
-        tyear=$(echo $tline | awk '{ print $1 }' | sed 's/-.*$//')
-        tmonth=$(echo $tline | awk '{ print $1 }' | sed 's/-/ /g' | awk '{ print $2 }')
-        tday=$(echo $tline | awk '{ print $1 }' | sed 's/^.*-//')
-        let i++
-        if [ $tyear -lt $nyear ]
-        then
-            rulog
-        fi
-        if [ $tday -lt $nday ]
-        then
-            let "trm = $nmonth - 3"
-            if [ $tmonth -le $trm ]
-            then
-                rulog
-            fi
-        else
-            let "fom = $nmonth - 4"
-            if [ $tmonth -le $fom ]
-            then
-                rulog
-            fi
-        fi
-    done
-}
-        
 #files
 if [ $# -eq 0 ]
 then

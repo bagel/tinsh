@@ -13,7 +13,23 @@ move()
     if [ -e $files ]
     then
         nfiles=$(echo $files | sed 's/\/$//' | sed 's/^.*\///g')
-        mv $nfiles $trash
+        if [ -e $trash/$nfiles ]   #same name in $trash
+        then
+            let i=1
+            while [ $i -lt 1000 ]
+            do
+                if [ -e $trash/$nfiles-$i ]
+                then
+                    let i++
+                else
+                    mv $files $trash/$nfiles-$i 
+                    nfiles=$nfiles-$i  #trash file name write to $log
+                    break
+                fi
+            done
+        else
+            mv $files $trash
+        fi
         nchar=$(echo $files | cut -c1)
         if [ "$nchar" != "/" ]
         then

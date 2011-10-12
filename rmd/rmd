@@ -13,17 +13,29 @@ move()
     if [ -e $files ]
     then
         nfiles=$(echo $files | sed 's/\/$//' | sed 's/^.*\///g')
+        anfiles=$nfiles
+        nchar=$(echo $files | cut -c1)
+        if [ "$nchar" != "/" ]
+        then
+            comp=$(echo $files | grep -v "/")  #relative path to remove
+            if [ -z $comp ]
+            then
+                cpath=$(echo $files | awk -F "$nfiles" '{ print $1 }')
+                cd $cpath
+                files=`pwd`/$nfiles
+            fi
+        fi
         if [ -e $trash/$nfiles ]   #same name in $trash
         then
             let i=1
-            while [ $i -lt 1000 ]
+            while [ 1 -eq 1 ]
             do
                 if [ -e $trash/$nfiles-$i ]
                 then
                     let i++
                 else
                     mv $files $trash/$nfiles-$i 
-                    nfiles=$nfiles-$i  #trash file name write to $log
+                    anfiles=$nfiles-$i  #trash file name write to $log
                     break
                 fi
             done
@@ -36,7 +48,7 @@ move()
             echo -e "`date +%F\ %T` :: $nfiles `pwd`" >>$log
         else
             npath=$(echo $files | awk -F "$nfiles" '{ print $1 }' | sed 's/\/$//')
-            echo -e "`date +%F\ %T` :: $nfiles $npath" >>$log
+            echo -e "`date +%F\ %T` :: $anfiles $npath" >>$log
         fi
     else
         echo "$files: No such file or directory"

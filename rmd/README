@@ -20,3 +20,7 @@ time limit to remove too old files in trash
 
 =====>2011-10-11<=====
 move files in aboslute directory and also recover
+
+=====>2011-10-12<=====
+rmd now can move files in current,absolute and relative path
+and recover to the right path.

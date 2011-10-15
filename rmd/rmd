@@ -45,7 +45,7 @@ move()
         nchar=$(echo $files | cut -c1)
         if [ "$nchar" != "/" ]
         then
-            echo -e "`date +%F\ %T` :: $nfiles `pwd`" >>$log
+            echo -e "`date +%F\ %T` :: $anfiles `pwd`" >>$log
         else
             npath=$(echo $files | awk -F "$nfiles" '{ print $1 }' | sed 's/\/$//')
             echo -e "`date +%F\ %T` :: $anfiles $npath" >>$log

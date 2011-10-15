@@ -73,8 +73,8 @@ recover()
 #remove and  update log file
 rulog()
 {
-    rm $trash/$files -f
-    grep -v "$tline" $log > $trash/.log-rtmp
+    [ -e $trash/$files ] && rm $trash/$files -rf
+    grep -v "$files $tpath" $log > $trash/.log-rtmp
     mv $trash/{.log-rtmp,.log} -f
     let i=0
 }
@@ -85,37 +85,23 @@ tlimit()
     nyear=$(date +%Y)
     nmonth=$(date +%m)
     nday=$(date +%d)
-    let i=1
-    while [ 1 -eq 1 ]
+    while read tdate ttime tsegm files tpath  #read from $log
     do
-        tline=$(head -1 $log)  #head line the time is longest
-        files=$(echo $tline | awk '{ print $4 }')
-        tyear=$(echo $tline | awk '{ print $1 }' | sed 's/-.*$//')
-        tmonth=$(echo $tline | awk '{ print $1 }' | sed 's/-/ /g' | awk '{ print $2 }')
-        tday=$(echo $tline | awk '{ print $1 }' | sed 's/^.*-//')
-        if [ $tyear -lt $nyear ]
-        then
-            rulog
-        fi
+        let i=1
+        tyear=$(echo $tdate | sed 's/-.*$//')
+        tmonth=$(echo $tdate | sed 's/-/ /g' | awk '{ print $2 }')
+        tday=$(echo $tdate | sed 's/^.*-//')
+        [ $tyear -lt $nyear ] && rulog
         if [ $tday -lt $nday ]
         then
             let "trm = $nmonth - 3"
-            if [ $tmonth -le $trm ]
-            then
-                rulog
-            fi
+            [ $tmonth -le $trm ] && rulog
         else
             let "fom = $nmonth - 4"
-            if [ $tmonth -le $fom ]
-            then
-                rulog
-            fi
+            [ $tmonth -le $fom ] && rulog
         fi
-        if [ $i -eq 1 ]   #no file remove break
-        then
-            break
-        fi
-    done
+        [ $i -eq 1 ] && break   #no file remove break
+    done <$log
 }
         
 #run

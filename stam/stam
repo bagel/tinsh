@@ -6,12 +6,12 @@ tmp=
 let i=0
 
 for arg in $(echo $@) ; do
-    str=$(type $arg 2>/dev/null)
-    if [ -n "$str" ] ; then
+    type $arg >/dev/null 2>&1
+    if [ $? -eq 0 ] ; then  #if $? is zero,arg is command
         if [ $i -eq 0 ] ; then
             tmp=
         fi
-        $tmp >/dev/null 2>&1 &
+        $tmp >/dev/null 2>&1 &  #run command previous
         tmp=$arg
         let i=1
     else
@@ -20,6 +20,7 @@ for arg in $(echo $@) ; do
     fi
 done
 
+#if the last arg is command
 if [ $i -eq 1 ] ; then
     $tmp >/dev/null 2>&1 &
 fi

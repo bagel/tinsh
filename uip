@@ -1,0 +1,94 @@
+#!/bin/sh
+# 2011-12-12 13:11:25
+# Copyright 2011 Yu Tsao
+# Update FreeDNS IP
+
+# Usage
+get_Usage()
+{
+    echo "Copyright 2011 Yu Tsao."
+    echo "Usage: uip -h ,--help ,get help"
+    echo "       uip -u url ,update url which you can get from FreeDNS XML"
+    echo "       uip -f file ,update urls in a file"
+}
+
+# Get current IP
+get_currentIP()
+{
+    exec 6<>/dev/tcp/whatismyipaddress.com/80
+    echo -e "GET / HTTP/1.0\n" >&6
+    currentIP=$(cat <&6 | grep "Your IP" | awk '{ print $5 }' | sed 's/<.*$//')
+}
+
+# Get old IP
+get_oldIP()
+{
+    myIP=/var/tmp/myip
+    if [ ! -e $myIP ] ; then
+        echo "0.0.0.0" >$myIP
+    fi
+    oldIP=$(cat $myIP)
+}
+
+# Update IP,You should go to http://freedns.afraid.org/api/ to check the XML.
+updateIP()
+{
+    if [ $# -lt 1 ] && [ $# -gt 2 ] ; then
+        echo "Error: Option error,tyr --help"
+        get_Usage
+    elif [ $# -eq 1 ] ; then
+        case $1 in
+            -h|--help) get_Usage
+                       ;;
+            -u) echo "No url found,try --help"
+                get_Usage
+                ;;
+            -f) echo "No file found,try --help"
+                get_Usage
+                ;;
+            *) echo "Error option give,try --help"
+               get_Usage
+               ;;
+        esac 
+    elif [ $# -eq 2 ] ; then
+        case $1 in
+            -u) curl -s http://freedns.afraid.org/dynamic/update.php?$2
+                ;;
+            -f) if [ -e $2 ] ; then
+                    for urls in $(cat $2) ; do
+                        curl -s http://freedns.afraid.org/dynamic/update.php?$urls
+                    done
+                else
+                    echo "Error: $2 not found"
+                fi
+                ;;
+            *) echo "Error option,try --help"
+               get_Usage
+               ;;
+        esac
+    fi
+}
+    
+# Check the IP and update.
+check_updateIP()
+{
+    get_currentIP
+    if [ $? -eq 0 ] ; then
+        get_oldIP
+        if [ -n "$currentIP" ] ; then
+            if [ "$currentIP" != "$oldIP" ] ; then
+                echo "IP will be updated."
+                updateIP $@
+            else
+                echo "IP not changed."
+            fi
+        else
+            echo "Check your net connect."
+        fi
+    else
+        echo "Check your net connect."
+    fi
+}
+
+# Updat IP
+check_updateIP $@

@@ -27,3 +27,7 @@ Start applications and also include arguments.
 rmd
 Move files to a directory like /home/trash which you don't need them
 and you can also recover them.
+
+=====>2011-12-12<=====
+uip
+Check your current IP and update to FreeDNS.

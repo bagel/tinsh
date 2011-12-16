@@ -8,8 +8,14 @@ get_Usage()
 {
     echo "Copyright 2011 Yu Tsao."
     echo "Usage: uip -h ,--help ,get help"
-    echo "       uip -u url ,update url which you can get from FreeDNS XML"
-    echo "       uip -f file ,update urls in a file"
+    echo "       uip -u HOST URL ,update host by url which get from FreeDNS XML"
+    echo "       uip -f FILE ,update by a file contain hosts and urls"
+}
+
+# Error
+get_Error()
+{
+    echo "Error: option error, try --help"
 }
 
 # Get current IP
@@ -20,25 +26,18 @@ get_currentIP()
     currentIP=$(cat <&6 | grep "Your IP" | awk '{ print $5 }' | sed 's/<.*$//')
 }
 
-# Get old IP
+#Use host to get old IP
 get_oldIP()
 {
-    myIP=/var/tmp/myip
-    if [ ! -e $myIP ] ; then
-        echo "0.0.0.0" >$myIP
-    fi
-    oldIP=$(cat $myIP)
+    oldIP=$(host $1 | head -1 | cut -f 4 -d " ")   
 }
 
 # Check IP if need to update
 checkIP()
 {
-    echo "Checking IP ..."
-    get_currentIP
-    get_oldIP
     if [ "$currentIP" == "$oldIP" ] ; then
+        i=0
         echo "Your IP not changed."
-        exit 1
     else
         echo "Your IP has changed and will be updated."
     fi
@@ -47,35 +46,45 @@ checkIP()
 # Update IP,You should go to http://freedns.afraid.org/api/ to check the XML.
 updateIP()
 {
-    if [ $# -lt 1 ] || [ $# -gt 2 ] ; then
-        echo "Error: Option error,try --help"
+    if [ $# -lt 1 ] || [ $# -gt 3 ] ; then
+        get_Error
     elif [ $# -eq 1 ] ; then
         case $1 in
             -h|--help) get_Usage
                        ;;
-            -u) echo "No url found,try --help"
-                ;;
-            -f) echo "No file found,try --help"
-                ;;
-            *) echo "Error option give,try --help"
-               ;;
+            *) get_Error ;;
         esac 
     elif [ $# -eq 2 ] ; then
         case $1 in
-            -u) checkIP
-                curl -s http://freedns.afraid.org/dynamic/update.php?$2
-                ;;
             -f) if [ -e $2 ] ; then
-                    checkIP
-                    for urls in $(cat $2) ; do
+                    get_currentIP
+                    for line in $(cat $2) ; do
+                        host=$(echo $line | cut -f 1 -d ",")  #use cut and awk
+                        urls=$(echo $line | awk -F "," '{ print $2 }')
+                        get_oldIP $host
+                        checkIP
+                        if [ $i -eq 0 ] ; then
+                            continue
+                        fi
                         curl -s http://freedns.afraid.org/dynamic/update.php?$urls
                     done
                 else
                     echo "Error: file $2 not found"
                 fi
                 ;;
-            *) echo "Error option,try --help"
-               ;;
+            *) get_Error ;;
+        esac
+    elif [ $# -eq 3 ] ; then
+        case $1 in
+            -u) get_oldIP $2
+                get_currentIP
+                checkIP
+                if [ $i -eq 0 ] ; then
+                    exit 0
+                fi
+                curl -s http://freedns.afraid.org/dynamic/update.php?$3
+                ;;
+           *) get_Error ;;
         esac
     fi
 }

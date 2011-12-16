@@ -30,65 +30,55 @@ get_oldIP()
     oldIP=$(cat $myIP)
 }
 
+# Check IP if need to update
+checkIP()
+{
+    echo "Checking IP ..."
+    get_currentIP
+    get_oldIP
+    if [ "$currentIP" == "$oldIP" ] ; then
+        echo "Your IP not changed."
+        exit 1
+    else
+        echo "Your IP has changed and will be updated."
+    fi
+}
+
 # Update IP,You should go to http://freedns.afraid.org/api/ to check the XML.
 updateIP()
 {
-    if [ $# -lt 1 ] && [ $# -gt 2 ] ; then
-        echo "Error: Option error,tyr --help"
-        get_Usage
+    if [ $# -lt 1 ] || [ $# -gt 2 ] ; then
+        echo "Error: Option error,try --help"
     elif [ $# -eq 1 ] ; then
         case $1 in
             -h|--help) get_Usage
                        ;;
             -u) echo "No url found,try --help"
-                get_Usage
                 ;;
             -f) echo "No file found,try --help"
-                get_Usage
                 ;;
             *) echo "Error option give,try --help"
-               get_Usage
                ;;
         esac 
     elif [ $# -eq 2 ] ; then
         case $1 in
-            -u) curl -s http://freedns.afraid.org/dynamic/update.php?$2
+            -u) checkIP
+                curl -s http://freedns.afraid.org/dynamic/update.php?$2
                 ;;
             -f) if [ -e $2 ] ; then
+                    checkIP
                     for urls in $(cat $2) ; do
                         curl -s http://freedns.afraid.org/dynamic/update.php?$urls
                     done
                 else
-                    echo "Error: $2 not found"
+                    echo "Error: file $2 not found"
                 fi
                 ;;
             *) echo "Error option,try --help"
-               get_Usage
                ;;
         esac
     fi
 }
     
 # Check the IP and update.
-check_updateIP()
-{
-    get_currentIP
-    if [ $? -eq 0 ] ; then
-        get_oldIP
-        if [ -n "$currentIP" ] ; then
-            if [ "$currentIP" != "$oldIP" ] ; then
-                echo "IP will be updated."
-                updateIP $@
-            else
-                echo "IP not changed."
-            fi
-        else
-            echo "Check your net connect."
-        fi
-    else
-        echo "Check your net connect."
-    fi
-}
-
-# Updat IP
-check_updateIP $@
+updateIP $@

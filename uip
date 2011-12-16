@@ -89,5 +89,5 @@ updateIP()
     fi
 }
     
-# Check the IP and update.
+# Check the IP and update
 updateIP $@

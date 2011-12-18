@@ -37,9 +37,9 @@ checkIP()
 {
     if [ "$currentIP" == "$oldIP" ] ; then
         i=0
-        echo "Your IP not changed."
+        echo "IP not changed."
     else
-        echo "Your IP has changed and will be updated."
+        echo "IP has changed and will be updated."
     fi
 }
 
@@ -61,6 +61,7 @@ updateIP()
                     for line in $(cat $2) ; do
                         host=$(echo $line | cut -f 1 -d ",")  #use cut and awk
                         urls=$(echo $line | awk -F "," '{ print $2 }')
+                        echo -e "$host -> \c"
                         get_oldIP $host
                         checkIP
                         if [ $i -eq 0 ] ; then
@@ -89,5 +90,5 @@ updateIP()
     fi
 }
     
-# Check the IP and update
+# Check the IP and update.
 updateIP $@
